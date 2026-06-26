@@ -18,10 +18,13 @@
         @php
           $children = !empty($it['children'])
             ? array_filter($it['children'], fn($c) =>
-                !isset($c['roles']) || auth()->user()->roleKode() === 'admin' || in_array(auth()->user()->roleKode(), $c['roles'], true))
+                !isset($c['roles']) || auth()->user()->roleKode() === 'superadmin' || in_array(auth()->user()->roleKode(), $c['roles'], true))
             : [];
           $itemUrl = $menuService->urlFor($it);
-          $active = request()->routeIs($it['route'] ?? '') ? 'active' : '';
+          $legacyPath = request()->route('path') ?? '';
+          $matchKey = $it['match'] ?? (!empty($it['legacy']) ? preg_replace('#^modules/#', '', explode('?', $it['legacy'])[0]) : '');
+          $active = request()->routeIs($it['route'] ?? '')
+            || ($legacyPath !== '' && $matchKey !== '' && str_contains($legacyPath, $matchKey)) ? 'active' : '';
         @endphp
         @if($children)
           <div class="nav-group">
@@ -30,7 +33,7 @@
                 <span class="ico">{!! app_icon($it['ico']) !!}</span>
                 <span class="txt">{{ $it['label'] }}</span>
               </a>
-              <button type="button" class="np-caret" onclick="toggleNavGroup(this)" aria-label="Buka/tutup sub-menu">{!! app_icon('chevron') !!}</button>
+              <button type="button" class="np-caret" onclick="toggleNavGroup(this)" aria-label="{{ __('app.toggle_submenu') }}">{!! app_icon('chevron') !!}</button>
             </div>
             <div class="nav-sub">
               @foreach($children as $c)
@@ -47,10 +50,10 @@
     @endforeach
   </nav>
   <div class="sidebar-foot">
-    <form method="post" action="{{ route('logout') }}" onsubmit="return confirm('Keluar dari aplikasi?')">
+    <form method="post" action="{{ route('logout') }}" onsubmit="return confirm(@json(__('app.logout_confirm')))">
       @csrf
-      <button type="submit" class="logout-link" title="Keluar">
-        <span class="ico">{!! app_icon('logout') !!}</span> <span class="txt">Keluar</span>
+      <button type="submit" class="logout-link" title="{{ __('app.logout') }}">
+        <span class="ico">{!! app_icon('logout') !!}</span> <span class="txt">{{ __('app.logout') }}</span>
       </button>
     </form>
   </div>

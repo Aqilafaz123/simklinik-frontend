@@ -145,7 +145,7 @@ h3,h4,h5,h6{font-size:var(--fs-text)}
 .menu-toggle .mt-x{display:none}
 .sidebar-backdrop{display:none}
 .topbar .page-title{font-size:20px;font-weight:600}
-.topbar-right{display:flex;align-items:center;gap:8px}
+.topbar-right{display:flex;align-items:center;gap:12px}
 /* search di topbar */
 .topbar-search{position:relative;margin-left:6px}
 .topbar-search .ts-ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);
@@ -451,6 +451,8 @@ a.card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);border-color
 .form-actions .btn{padding-left:24px;padding-right:24px}
 
 .section-title{font-size:var(--fs-sub);font-weight:700;margin:26px 0 13px;display:flex;align-items:center;gap:10px}
+.dash-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:26px 0 13px;flex-wrap:wrap}
+.dash-section-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .section-title::before{content:"";width:5px;height:20px;border-radius:3px;
   background:linear-gradient(180deg,#3b82f6,#2563eb)}
 

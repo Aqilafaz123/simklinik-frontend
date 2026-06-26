@@ -1,48 +1,41 @@
 @extends('layouts.app')
 
-@php($pageTitle = 'Dashboard')
+@php($pageTitle = __('app.dashboard'))
 
 @section('content')
-<div class="cards">
-  <div class="card stat">
-    <div><div class="num">{{ (int) $pasienHariIni }}</div><div class="lbl">Pasien Hari Ini</div></div>
-    <div class="ico bg-blue">{!! app_icon('users') !!}</div>
-  </div>
-  <div class="card stat">
-    <div><div class="num">{{ (int) $antrianAktif }}</div><div class="lbl">Antrian Aktif</div></div>
-    <div class="ico bg-orange">{!! app_icon('ticket') !!}</div>
-  </div>
-  <div class="card stat">
-    <div><div class="num">{{ rupiah($pendapatanHariIni) }}</div><div class="lbl">Pendapatan Hari Ini</div></div>
-    <div class="ico bg-green">{!! app_icon('money') !!}</div>
-  </div>
-  <div class="card stat">
-    <div><div class="num">{{ (int) $totalPasien }}</div><div class="lbl">Total Pasien Terdaftar</div></div>
-    <div class="ico bg-purple">{!! app_icon('idcard') !!}</div>
-  </div>
-  <div class="card stat">
-    <div><div class="num">{{ (int) $stokMenipis }}</div><div class="lbl">Obat Stok Menipis</div></div>
-    <div class="ico bg-red">{!! app_icon('pills') !!}</div>
+@if($canPatientData)
+<div class="dash-section-head">
+  <div class="section-title" style="margin:0">{{ __('menu.patient_data') }}</div>
+  <div class="dash-section-actions">
+    <a class="btn btn-sm btn-light" href="{{ route('legacy', ['path' => 'modules/registrasi/pasien.php']) }}">{{ __('common.view_all') }}</a>
+    <a class="btn" href="{{ route('legacy', ['path' => 'modules/registrasi/pasien_form.php']) }}">{!! app_icon('plus') !!} {{ __('common.new_patient') }}</a>
   </div>
 </div>
-
-<div class="section-title">Antrian Hari Ini</div>
 <div class="table-wrap">
   <table class="datatable no-auto-num" style="width:100%">
     <thead>
-      <tr><th>No. Antrian</th><th>Pasien</th><th>Poli</th><th>Dokter</th><th>Status</th></tr>
+      <tr>
+        <th>{{ __('common.mr_no') }}</th>
+        <th>{{ __('common.name') }}</th>
+        <th>{{ __('common.gender') }}</th>
+        <th>{{ __('common.birth_date') }}</th>
+        <th>{{ __('common.phone') }}</th>
+        <th>{{ __('common.group') }}</th>
+      </tr>
     </thead>
     <tbody>
-      @foreach($antrian as $a)
+      @foreach($pasienTerbaru as $p)
         <tr>
-          <td><b>{{ $a->poli }}-{{ str_pad($a->no_antrian, 3, '0', STR_PAD_LEFT) }}</b></td>
-          <td>{{ $a->pasien }}</td>
-          <td>{{ $a->poli }}</td>
-          <td>{{ $a->dokter ?? '-' }}</td>
-          <td><span class="badge {{ $badgeMap[$a->status] ?? 'badge-gray' }}">{{ ucfirst($a->status) }}</span></td>
+          <td><b>{{ $p->no_mr }}</b></td>
+          <td>{{ $p->nama }}</td>
+          <td>{{ $p->jenis_kelamin === 'L' ? 'L' : 'P' }}</td>
+          <td>{{ tgl_id($p->tgl_lahir) }}</td>
+          <td>{{ $p->telepon ?? '-' }}</td>
+          <td>{{ $p->kelompok ?? '-' }}</td>
         </tr>
       @endforeach
     </tbody>
   </table>
 </div>
+@endif
 @endsection

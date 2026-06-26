@@ -57,14 +57,35 @@ SIDEBAR_MQ.addEventListener('change', function(e){ if (!e.matches) closeSidebar(
 </script>
 <script src="{{ asset('assets/vendor/jquery.min.js') }}"></script>
 <script src="{{ asset('assets/vendor/datatables.min.js') }}"></script>
+@php
+  $simDatatableLang = [
+    'search' => __('datatable.search'),
+    'searchPlaceholder' => __('datatable.search_placeholder'),
+    'lengthMenu' => __('datatable.length_menu'),
+    'info' => __('datatable.info'),
+    'infoEmpty' => __('datatable.info_empty'),
+    'infoFiltered' => __('datatable.info_filtered'),
+    'zeroRecords' => __('datatable.zero_records'),
+    'emptyTable' => __('datatable.empty_table'),
+    'paginate' => [
+      'first' => __('datatable.paginate.first'),
+      'previous' => __('datatable.paginate.previous'),
+      'next' => __('datatable.paginate.next'),
+      'last' => __('datatable.paginate.last'),
+    ],
+  ];
+  $simDatatableColNo = __('datatable.col_no');
+@endphp
 <script>
+var SIM_DT_LANG = {!! json_encode($simDatatableLang, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) !!};
+var SIM_DT_COL_NO = {!! json_encode($simDatatableColNo, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) !!};
 $(function () {
   $('table.datatable').each(function () {
     var $t = $(this);
     if ($t.hasClass('no-auto-num')) return;
     var $headRow = $t.find('thead tr').first();
     if ($.trim($headRow.children().first().text()).toLowerCase() === 'no') return;
-    $headRow.prepend('<th class="no-sort col-no">No</th>');
+    $headRow.prepend('<th class="no-sort col-no">' + SIM_DT_COL_NO + '</th>');
     $t.find('tbody tr').each(function () {
       if ($(this).children('td').first().attr('colspan')) return;
       if ($(this).children('td').length) $(this).prepend('<td class="col-no"></td>');
@@ -79,14 +100,7 @@ $(function () {
       { orderable: false, targets: 'no-sort' },
       { searchable: false, targets: 'col-no' }
     ],
-    language: {
-      search: 'Cari:',
-      lengthMenu: 'Tampilkan _MENU_ data',
-      info: 'Menampilkan _START_–_END_ dari _TOTAL_ data',
-      zeroRecords: 'Data tidak ditemukan',
-      emptyTable: 'Belum ada data',
-      paginate: { first: 'Awal', previous: 'Sebelumnya', next: 'Berikutnya', last: 'Akhir' }
-    }
+    language: SIM_DT_LANG
   };
   var apis = [];
   $('table.datatable').each(function () {
